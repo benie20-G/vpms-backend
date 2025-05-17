@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 /**
  * Prisma client instance for database operations
- * @type {PrismaClient}
+ * @type
  */
 export const prisma = new PrismaClient({
   log: ['query', 'error', 'warn'],
@@ -11,7 +11,7 @@ export const prisma = new PrismaClient({
 
 /**
  * Initializes the database connection
- * @returns {Promise<void>}
+ * @returns 
  */
 export async function connectDB() {
   try {

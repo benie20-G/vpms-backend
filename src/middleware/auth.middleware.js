@@ -1,8 +1,9 @@
-import jwt from 'jsonwebtoken';
-import { prisma } from '../lib/prisma';
+
+const jwt = require('jsonwebtoken')
+const {prisma} = require('../lib/prisma')
 
 // Middleware to authenticate user using JWT
-export const authenticate = async (req, res, next) => {
+const authenticate = async (req, res, next) => {
   try {
     // Get Authorization header
     const authHeader = req.headers.authorization;
@@ -27,8 +28,10 @@ export const authenticate = async (req, res, next) => {
 };
 
 // Middleware to authorize admin users only
-export const authorizeAdmin = (req, res, next) => {
+const authorizeAdmin = (req, res, next) => {
   // Check if user exists and has 'ADMIN' role
   if (!req.user || req.user.role !== 'ADMIN') return res.status(403).json({ error: 'Forbidden: Admin access required' });
   next();
 };
+
+module.exports= {authenticate,authorizeAdmin}

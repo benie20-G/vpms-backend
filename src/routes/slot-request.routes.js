@@ -1,9 +1,7 @@
-
-import { Router } from 'express';
-import * as SlotRequestController from '../controllers/slot-request.controller';
-import { authenticate, authorizeAdmin } from '../middleware/auth.middleware';
-
-export const slotRequestRoutes = Router();
+const { Router } = require('express');
+const SlotRequestController = require('../controllers/slot-request.controller');
+const { authenticate, authorizeAdmin } = require('../middleware/auth.middleware');
+const slotRequestRoutes = Router();
 
 // All routes require authentication
 slotRequestRoutes.use(authenticate);
@@ -412,3 +410,4 @@ slotRequestRoutes.post('/:id/approve', authorizeAdmin, SlotRequestController.app
  *               $ref: '#/components/schemas/Error'
  */
 slotRequestRoutes.post('/:id/reject', authorizeAdmin, SlotRequestController.rejectSlotRequest);
+module.exports = slotRequestRoutes;

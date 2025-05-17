@@ -1,9 +1,7 @@
-
-import { Router } from 'express';
-import * as ParkingController from '../controllers/parking.controller';
-import { authenticate, authorizeAdmin } from '../middleware/auth.middleware';
-
-export const parkingRoutes = Router();
+const { Router } = require('express');
+const ParkingController = require('../controllers/parking.controller');
+const { authenticate, authorizeAdmin } = require('../middleware/auth.middleware');
+const parkingRoutes = Router();
 
 // All parking routes require authentication
 parkingRoutes.use(authenticate);
@@ -203,3 +201,4 @@ parkingRoutes.post('/request-checkout/:sessionId', ParkingController.requestChec
  *               $ref: '#/components/schemas/Error'
  */
 parkingRoutes.post('/checkout/:sessionId', authorizeAdmin, ParkingController.checkOutVehicle);
+module.exports = parkingRoutes;

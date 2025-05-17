@@ -1,9 +1,8 @@
 
-import { Router } from 'express';
-import * as VehicleController from '../controllers/vehicle.controller';
-import { authenticate } from '../middleware/auth.middleware';
-
-export const vehicleRoutes = Router();
+const { Router } = require('express');
+const {getAllVehicles,getVehicleById,deleteVehicle,updateVehicle,createVehicle} = require('../controllers/vehicle.controller')
+const vehicleRoutes = Router();
+const {authenticate} = require('../middleware/auth.middleware')
 
 // All vehicle routes require authentication
 vehicleRoutes.use(authenticate);
@@ -32,7 +31,7 @@ vehicleRoutes.use(authenticate);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-vehicleRoutes.get('/', VehicleController.getAllVehicles);
+vehicleRoutes.get('/',getAllVehicles);
 
 /**
  * @swagger
@@ -75,7 +74,7 @@ vehicleRoutes.get('/', VehicleController.getAllVehicles);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-vehicleRoutes.get('/:id', VehicleController.getVehicleById);
+vehicleRoutes.get('/:id',getVehicleById);
 
 /**
  * @swagger
@@ -129,7 +128,7 @@ vehicleRoutes.get('/:id', VehicleController.getVehicleById);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-vehicleRoutes.post('/', VehicleController.createVehicle);
+vehicleRoutes.post('/',createVehicle);
 
 /**
  * @swagger
@@ -197,7 +196,7 @@ vehicleRoutes.post('/', VehicleController.createVehicle);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-vehicleRoutes.put('/:id', VehicleController.updateVehicle);
+vehicleRoutes.put('/:id',updateVehicle);
 
 /**
  * @swagger
@@ -244,4 +243,5 @@ vehicleRoutes.put('/:id', VehicleController.updateVehicle);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-vehicleRoutes.delete('/:id', VehicleController.deleteVehicle);
+vehicleRoutes.delete('/:id',deleteVehicle);
+module.exports = {vehicleRoutes }

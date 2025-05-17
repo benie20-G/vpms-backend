@@ -1,9 +1,8 @@
 
-import { Router } from 'express';
-import * as UserController from '../controllers/user.controller';
-import { authenticate, authorizeAdmin } from '../middleware/auth.middleware';
-
-export const userRoutes = Router();
+const { Router } = require('express');
+const UserController = require('../controllers/user.controller');
+const { authenticate, authorizeAdmin } = require('../middleware/auth.middleware');
+const userRoutes = Router();
 
 // All user routes require authentication
 userRoutes.use(authenticate);
@@ -170,3 +169,5 @@ userRoutes.put('/password', UserController.updatePassword);
  *               $ref: '#/components/schemas/Error'
  */
 userRoutes.get('/', authorizeAdmin, UserController.getAllUsers);
+
+module.exports = userRoutes;

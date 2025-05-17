@@ -1,9 +1,8 @@
 
-import { Router } from 'express';
-import * as NotificationController from '../controllers/notification.controller';
-import { authenticate } from '../middleware/auth.middleware';
-
-export const notificationRoutes = Router();
+const { Router } = require('express');
+const NotificationController = require('../controllers/notification.controller');
+const { authenticate } = require('../middleware/auth.middleware');
+const notificationRoutes = Router();
 
 // All notification routes require authentication
 notificationRoutes.use(authenticate);
@@ -104,3 +103,4 @@ notificationRoutes.put('/:id/read', NotificationController.markNotificationAsRea
  *               $ref: '#/components/schemas/Error'
  */
 notificationRoutes.put('/read-all', NotificationController.markAllNotificationsAsRead);
+module.exports = notificationRoutes;

@@ -1,9 +1,8 @@
 
-import { Router } from 'express';
-import * as ParkingSlotController from '../controllers/parking-slot.controller';
-import { authenticate, authorizeAdmin } from '../middleware/auth.middleware';
-
-export const parkingSlotRoutes = Router();
+const { Router } = require('express');
+const ParkingSlotController = require('../controllers/parking-slot.controller');
+const { authenticate, authorizeAdmin } = require('../middleware/auth.middleware');
+const parkingSlotRoutes = Router();
 
 // All routes require authentication
 parkingSlotRoutes.use(authenticate);
@@ -343,3 +342,5 @@ parkingSlotRoutes.delete('/:id', ParkingSlotController.deleteParkingSlot);
  *               $ref: '#/components/schemas/Error'
  */
 parkingSlotRoutes.post('/seed', authorizeAdmin, ParkingSlotController.seedParkingSlots);
+
+module.exports = parkingSlotRoutes;

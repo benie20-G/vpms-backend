@@ -1,8 +1,7 @@
-
-import { Request, Response, NextFunction } from 'express';
-import { prisma } from '../lib/prisma';
-import { z } from 'zod';
-import { createNotification } from './notification.controller';
+// Remove TypeScript types and use require for dependencies if needed
+const { prisma } = require('../lib/prisma');
+const { z } = require('zod');
+const { createNotification } = require('./notification.controller');
 
 // Validation schemas
 const checkInSchema = z.object({

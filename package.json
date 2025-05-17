@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "js-node-dev --respawn --transpile-only src/server.js",
     "build": "jsc",
-    "start": "node dist/server.js",
+    "start": "node src/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",

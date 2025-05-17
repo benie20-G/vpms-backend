@@ -1,8 +1,9 @@
 
-import { Router } from 'express';
-import * as AuthController from '../controllers/auth.controller';
+const { Router } = require('express');
+const AuthController = require('../controllers/auth.controller');
 
-export const authRoutes = Router();
+
+const authRoutes = Router();
 
 /**
  * @swagger
@@ -295,3 +296,7 @@ authRoutes.post('/forgot-password', AuthController.forgotPassword);
  *               $ref: '#/components/schemas/Error'
  */
 authRoutes.post('/reset-password', AuthController.resetPassword);
+
+module.exports={
+    authRoutes
+}

@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { z } = require('zod');
 const { prisma } = require('../lib/prisma');
-const { sendEmail } = require('../lib/email');
+const { sendEmail, sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } = require('../lib/email');
 const crypto = require('crypto');
 
 // JWT Configuration
@@ -90,19 +90,7 @@ const register = async (req, res, next) => {
     });
     
     // Send verification email
-    await sendEmail({
-      to: email,
-      subject: 'Verify your Park Zenith account',
-      html: `
-        <h1>Welcome to Park Zenith!</h1>
-        <p>Hello ${name},</p>
-        <p>Thank you for registering with Park Zenith. To complete your registration, please use the following verification code:</p>
-        <h2 style="font-size: 24px; background-color: #f4f4f4; padding: 10px; text-align: center;">${verificationCode}</h2>
-        <p>This code will expire in 6 hours.</p>
-        <p>If you did not register for a Park Zenith account, please ignore this email.</p>
-        <p>Best regards,<br>The Park Zenith Team</p>
-      `,
-    });
+    await sendVerificationEmail(email,verificationCode, name);
     
     res.status(201).json({
       message: 'User registered successfully. Please verify your email.',
@@ -169,16 +157,7 @@ const verifyEmail = async (req, res, next) => {
     );
     
     // Send welcome email
-    await sendEmail({
-      to: email,
-      subject: 'Welcome to Park Zenith!',
-      html: `
-        <h1>Welcome to Park Zenith!</h1>
-        <p>Hello ${updatedUser.name},</p>
-        <p>Your email has been verified successfully. You can now log in to your account and start using Park Zenith.</p>
-        <p>Best regards,<br>The Park Zenith Team</p>
-      `,
-    });
+    await sendWelcomeEmail(updatedUser.email, updatedUser.name);
     
     res.json({
       message: 'Email verified successfully',
@@ -220,19 +199,7 @@ const resendVerificationCode = async (req, res, next) => {
     });
     
     // Send verification email
-    await sendEmail({
-      to: email,
-      subject: 'Park Zenith - New Verification Code',
-      html: `
-        <h1>Park Zenith Verification</h1>
-        <p>Hello ${user.name},</p>
-        <p>You requested a new verification code. Please use the following code to verify your account:</p>
-        <h2 style="font-size: 24px; background-color: #f4f4f4; padding: 10px; text-align: center;">${verificationCode}</h2>
-        <p>This code will expire in 6 hours.</p>
-        <p>If you did not request this code, please ignore this email.</p>
-        <p>Best regards,<br>The Park Zenith Team</p>
-      `,
-    });
+    await sendVerificationEmail(email, verificationCode, user.name);
     
     res.json({
       message: 'Verification code resent successfully',
@@ -272,19 +239,7 @@ const forgotPassword = async (req, res, next) => {
     });
     
     // Send reset email
-    await sendEmail({
-      to: email,
-      subject: 'Reset Your Park Zenith Password',
-      html: `
-        <h1>Password Reset</h1>
-        <p>Hello ${user.name},</p>
-        <p>You requested to reset your password. Please use the following code to reset your password:</p>
-        <h2 style="font-size: 24px; background-color: #f4f4f4; padding: 10px; text-align: center;">${resetCode}</h2>
-        <p>This code will expire in 6 hours.</p>
-        <p>If you did not request a password reset, please ignore this email.</p>
-        <p>Best regards,<br>The Park Zenith Team</p>
-      `,
-    });
+    await sendPasswordResetEmail(email, resetCode, user.name);
     
     res.json({
       message: 'If your email exists in our system, a reset code has been sent.',
@@ -333,17 +288,7 @@ const resetPassword = async (req, res, next) => {
     });
     
     // Send password changed email
-    await sendEmail({
-      to: email,
-      subject: 'Your Park Zenith Password Has Been Reset',
-      html: `
-        <h1>Password Reset Successful</h1>
-        <p>Hello ${user.name},</p>
-        <p>Your password has been successfully reset. You can now log in with your new password.</p>
-        <p>If you did not request this change, please contact support immediately.</p>
-        <p>Best regards,<br>The Park Zenith Team</p>
-      `,
-    });
+    await sendEmail(email, 'Password Changed', 'Your password has been changed successfully you can now login http://10.12.75.147/api/auth/login ');
     
     res.json({
       message: 'Password reset successfully',

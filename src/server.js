@@ -1,19 +1,18 @@
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const {authRoutes} = require('./routes/auth.routes');
+const { vehicleRoutes } = require('./routes/vehicle.routes');
+const { errorHandler } = require('./middleware/errorHandler');
+const { connectDB } = require('./lib/prisma');
+const userRoutes = require('./routes/user.routes');
+const parkingRoutes = require('./routes/parking.routes');
+const notificationRoutes = require('./routes/notification.routes');
+const slotRequestRoutes = require('./routes/slot-request.routes');
+const parkingSlotRoutes = require('./routes/parking-slot.routes');
 
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import 'dotenv/config'; 
-import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
-import { authRoutes } from './routes/auth.routes';
-import { userRoutes } from './routes/user.routes';
-import { vehicleRoutes } from './routes/vehicle.routes';
-import { parkingRoutes } from './routes/parking.routes';
-import { parkingSlotRoutes } from './routes/parking-slot.routes';
-import { slotRequestRoutes } from './routes/slot-request.routes';
-import { notificationRoutes } from './routes/notification.routes';
-import { errorHandler } from './middleware/errorHandler';
-import { connectDB } from './lib/prisma';
 
 // Load environment variables
 dotenv.config();
@@ -173,13 +172,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
+app.use('api/users',userRoutes);
 app.use('/api/vehicles', vehicleRoutes);
-app.use('/api/parking', parkingRoutes);
-app.use('/api/parking-slots', parkingSlotRoutes);
-app.use('/api/slot-requests', slotRequestRoutes);
-app.use('/api/notifications', notificationRoutes);
-
+app.use('api/parking',parkingRoutes)
+app.use('/api/norifications',notificationRoutes)
+app.use('/api/slot-requests',slotRequestRoutes)
+app.use('/api/parking-slots',parkingSlotRoutes)
 // Error handling middleware
 app.use(errorHandler);
 
