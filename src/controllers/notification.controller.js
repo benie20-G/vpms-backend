@@ -1,12 +1,7 @@
 
-import { Request, Response, NextFunction } from 'express';
-import { prisma } from '../lib/prisma';
+const { prisma } = require('../lib/prisma');
 
-export const getUserNotifications = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getUserNotifications = async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
@@ -23,11 +18,7 @@ export const getUserNotifications = async (
   }
 };
 
-export const markNotificationAsRead = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const markNotificationAsRead = async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
@@ -61,11 +52,7 @@ export const markNotificationAsRead = async (
   }
 };
 
-export const markAllNotificationsAsRead = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const markAllNotificationsAsRead = async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
@@ -89,13 +76,7 @@ export const markAllNotificationsAsRead = async (
 };
 
 // Helper function to create notifications (used internally)
-export const createNotification = async ({
-  userId,
-  message,
-}: {
-  userId: string;
-  message: string;
-}) => {
+const createNotification = async ({ userId, message }) => {
   return prisma.notification.create({
     data: {
       userId,
@@ -103,4 +84,10 @@ export const createNotification = async ({
       read: false,
     },
   });
+};
+module.exports = {
+  getUserNotifications,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+  createNotification,
 };

@@ -9,23 +9,23 @@ const checkInSchema = z.object({
   vehicleId: z.string(),
 });
 
-export const getParkingSessions = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+const getParkingSessions = async (
+  req,
+  res,
+  next
 ) => {
   try {
     const { vehicleId, status } = req.query;
     
     // Build filters
-    const filters: any = {};
+    const filters = {};
     
     if (vehicleId) {
-      filters.vehicleId = vehicleId as string;
+      filters.vehicleId = vehicleId;
     }
     
     if (status) {
-      filters.status = status as string;
+      filters.status = status;
     }
     
     // Admins can see all sessions, users can only see their own vehicles' sessions
@@ -76,74 +76,6 @@ export const getParkingSessions = async (
           },
         });
     
-    // Transform data to match frontend expectations
-    interface OwnerInfo {
-      name: string;
-      email: string;
-      phoneNumber: string;
-    }
-
-    interface VehicleInfo {
-      id: string;
-      plateNumber: string;
-      size: string;
-      vehicleType: string;
-      color: string;
-      ownerId: string;
-      owner?: OwnerInfo | null;
-    }
-
-    interface ParkingSession {
-      id: string;
-      vehicleId: string;
-      entryTime: Date;
-      exitTime: Date | null;
-      fee: number | null;
-      status: string;
-      vehicle?: VehicleInfo | null;
-    }
-
-    interface TransformedVehicle {
-      id: string;
-      plateNumber: string;
-      size: string;
-      vehicleType: string;
-      color: string;
-      ownerId: string;
-      ownerName: string;
-      ownerEmail: string;
-      ownerPhone: string;
-    }
-
-    interface TransformedSession {
-      id: string;
-      vehicleId: string;
-      entryTime: Date;
-      exitTime: Date | null;
-      fee: number | null;
-      status: string;
-      vehicle?: TransformedVehicle;
-    }
-
-    const transformedSessions: TransformedSession[] = (sessions as ParkingSession[]).map((session: ParkingSession): TransformedSession => ({
-      id: session.id,
-      vehicleId: session.vehicleId,
-      entryTime: session.entryTime,
-      exitTime: session.exitTime,
-      fee: session.fee,
-      status: session.status,
-      vehicle: session.vehicle ? {
-        id: session.vehicle.id,
-        plateNumber: session.vehicle.plateNumber,
-        size: session.vehicle.size,
-        vehicleType: session.vehicle.vehicleType,
-        color: session.vehicle.color,
-        ownerId: session.vehicle.ownerId,
-        ownerName: session.vehicle.owner?.name || '',
-        ownerEmail: session.vehicle.owner?.email || '',
-        ownerPhone: session.vehicle.owner?.phoneNumber || '',
-      } : undefined,
-    }));
     
     res.json(transformedSessions);
   } catch (error) {
@@ -151,10 +83,10 @@ export const getParkingSessions = async (
   }
 };
 
-export const checkInVehicle = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+const checkInVehicle = async (
+  req,
+  res,
+  next
 ) => {
   try {
     const { vehicleId } = checkInSchema.parse(req.body);
@@ -219,24 +151,6 @@ export const checkInVehicle = async (
       });
     }
     
-    // Transform data to match frontend expectations
-    const transformedSession = {
-      id: session.id,
-      vehicleId: session.vehicleId,
-      entryTime: session.entryTime,
-      exitTime: session.exitTime,
-      fee: session.fee,
-      status: session.status,
-      vehicle: session.vehicle ? {
-        id: session.vehicle.id,
-        plateNumber: session.vehicle.plateNumber,
-        color: session.vehicle.color,
-        ownerId: session.vehicle.ownerId,
-        ownerName: session.vehicle.owner?.name || '',
-        ownerEmail: session.vehicle.owner?.email || '',
-        ownerPhone: session.vehicle.owner?.phoneNumber || '',
-      } : undefined,
-    };
     
     res.status(201).json(transformedSession);
   } catch (error) {
@@ -244,10 +158,10 @@ export const checkInVehicle = async (
   }
 };
 
-export const requestCheckout = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+const requestCheckout = async (
+  req,
+  res,
+  next
 ) => {
   try {
     const { sessionId } = req.params;
@@ -310,10 +224,10 @@ export const requestCheckout = async (
   }
 };
 
-export const checkOutVehicle = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+const checkOutVehicle = async (
+  req,
+  res ,
+  next 
 ) => {
   try {
     const { sessionId } = req.params;
@@ -410,4 +324,11 @@ export const checkOutVehicle = async (
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  getParkingSessions,
+  checkInVehicle,
+  requestCheckout,
+  checkOutVehicle,
 };

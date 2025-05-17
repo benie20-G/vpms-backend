@@ -3,18 +3,13 @@ import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 
-interface EmailOptions  {
-  to: string,
-  subject: string,
-  html: string
-}
 
 /**
  * Sends an email using the configured transporter
  * @param options - Email options including recipient, subject, and HTML content
  * @returns The info object from the mail transport
  */
-export const sendEmail = async ({ to, subject, html }: EmailOptions) => {
+export const sendEmail = async ({ to, subject, html }) => {
   try {
     // Create transporter
     const transporter = nodemailer.createTransport({
@@ -50,9 +45,9 @@ export const sendEmail = async ({ to, subject, html }: EmailOptions) => {
  * @returns The HTML content with replacements applied
  */
 export const getEmailTemplate = (
-  templateName: string,
-  replacements: Record<string, string>
-): string => {
+  templateName,
+  replacements
+)=> {
   try {
     const templatePath = path.join(__dirname, '../templates', `${templateName}.html`);
     let template = fs.readFileSync(templatePath, 'utf-8');
@@ -77,9 +72,9 @@ export const getEmailTemplate = (
  * @param verificationCode - The verification code
  */
 export const sendVerificationEmail = async (
-  email: string, 
-  name: string, 
-  verificationCode: string
+  email,
+  name,
+  verificationCode
 ) => {
   const html = getEmailTemplate('verification-email', {
     name,
@@ -99,8 +94,8 @@ export const sendVerificationEmail = async (
  * @param name - User's name
  */
 export const sendWelcomeEmail = async (
-  email: string, 
-  name: string
+  email, 
+  name
 ) => {
   const html = getEmailTemplate('welcome-email', {
     name
@@ -120,9 +115,9 @@ export const sendWelcomeEmail = async (
  * @param resetCode - The password reset code
  */
 export const sendPasswordResetEmail = async (
-  email: string, 
-  name: string, 
-  resetCode: string
+  email, 
+  name, 
+  resetCode
 ) => {
   const html = getEmailTemplate('reset-password-email', {
     name,
@@ -142,8 +137,8 @@ export const sendPasswordResetEmail = async (
  * @param name - User's name
  */
 export const sendPasswordChangedEmail = async (
-  email: string, 
-  name: string
+  email, 
+  name
 ) => {
   const html = getEmailTemplate('password-changed-email', {
     name
@@ -163,18 +158,9 @@ export const sendPasswordChangedEmail = async (
  * @param details - Parking session details
  */
 export const sendParkingPaymentEmail = async (
-  email: string,
-  name: string,
-  details: {
-    vehicleMake: string;
-    vehicleModel: string;
-    vehicleColor: string;
-    plateNumber: string;
-    entryTime: string;
-    exitTime: string;
-    duration: string;
-    fee: string;
-  }
+  email,
+  name,
+  details
 ) => {
   const html = getEmailTemplate('parking-payment-email', {
     name,

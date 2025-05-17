@@ -13,7 +13,7 @@ export const prisma = new PrismaClient({
  * Initializes the database connection
  * @returns {Promise<void>}
  */
-export async function connectDB(): Promise<void> {
+export async function connectDB() {
   try {
     await prisma.$connect();
     console.log('Database connected successfully');

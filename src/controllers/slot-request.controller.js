@@ -1,12 +1,9 @@
-
-import { Request, Response, NextFunction } from 'express';
-import { z } from 'zod';
-import { prisma } from '../lib/prisma';
-import { Prisma } from '@prisma/client';
-import { sendEmail } from '../lib/email';
-import path from 'path';
-import fs from 'fs';
-import handlebars from 'handlebars';
+const { z } = require('zod');
+const { prisma } = require('../lib/prisma');
+const { sendEmail } = require('../lib/email');
+const path = require('path');
+const fs = require('fs');
+const handlebars = require('handlebars');
 
 // Validation schemas
 const createRequestSchema = z.object({
@@ -25,11 +22,7 @@ const rejectRequestSchema = z.object({
   note: z.string(),
 });
 
-export const getAllSlotRequests = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getAllSlotRequests = async (req, res, next) => {
   try {
     const { 
       page = '1', 
@@ -39,34 +32,34 @@ export const getAllSlotRequests = async (
       userId
     } = req.query;
     
-    const pageNumber = parseInt(page as string, 10);
-    const limitNumber = parseInt(limit as string, 10);
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
     const skip = (pageNumber - 1) * limitNumber;
     
     // Build where filter
-    const where: Prisma.SlotRequestWhereInput = {};
+    const where = {};
     
     // Users can only see their own requests, admins can see all
     if (req.user?.role !== 'ADMIN') {
-      where.userId = req.user!.id;
+      where.userId = req.user.id;
     } else if (userId) {
-      where.userId = userId as string;
+      where.userId = userId;
     }
     
     if (status) {
-      where.status = status as Prisma.EnumRequestStatusFilter;
+      where.status = status;
     }
     
     if (search) {
       where.OR = [
         {
           vehicle: {
-            plateNumber: { contains: search as string, mode: 'insensitive' },
+            plateNumber: { contains: search, mode: 'insensitive' },
           },
         },
         {
           user: {
-            name: { contains: search as string, mode: 'insensitive' },
+            name: { contains: search, mode: 'insensitive' },
           },
         },
       ];
@@ -114,11 +107,7 @@ export const getAllSlotRequests = async (
   }
 };
 
-export const getSlotRequestById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getSlotRequestById = async (req, res, next) => {
   try {
     const { id } = req.params;
     
@@ -153,11 +142,7 @@ export const getSlotRequestById = async (
   }
 };
 
-export const createSlotRequest = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const createSlotRequest = async (req, res, next) => {
   try {
     const { vehicleId } = createRequestSchema.parse(req.body);
     
@@ -207,7 +192,7 @@ export const createSlotRequest = async (
     // Create request
     const request = await prisma.slotRequest.create({
       data: {
-        userId: req.user!.id,
+        userId: req.user.id,
         vehicleId,
         status: 'PENDING',
       },
@@ -244,11 +229,7 @@ export const createSlotRequest = async (
   }
 };
 
-export const updateSlotRequest = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const updateSlotRequest = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updateData = updateRequestSchema.parse(req.body);
@@ -358,11 +339,7 @@ export const updateSlotRequest = async (
   }
 };
 
-export const deleteSlotRequest = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const deleteSlotRequest = async (req, res, next) => {
   try {
     const { id } = req.params;
     
@@ -396,11 +373,7 @@ export const deleteSlotRequest = async (
   }
 };
 
-export const approveSlotRequest = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const approveSlotRequest = async (req, res, next) => {
   try {
     // Only admins can approve requests
     if (req.user?.role !== 'ADMIN') {
@@ -518,11 +491,7 @@ export const approveSlotRequest = async (
   }
 };
 
-export const rejectSlotRequest = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const rejectSlotRequest = async (req, res, next) => {
   try {
     // Only admins can reject requests
     if (req.user?.role !== 'ADMIN') {
@@ -596,4 +565,14 @@ export const rejectSlotRequest = async (
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  getAllSlotRequests,
+  getSlotRequestById,
+  createSlotRequest,
+  updateSlotRequest,
+  deleteSlotRequest,
+  approveSlotRequest,
+  rejectSlotRequest,
 };

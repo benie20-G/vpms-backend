@@ -1,7 +1,5 @@
-
-import { Request, Response, NextFunction } from 'express';
-import { z } from 'zod';
-import { prisma } from '../lib/prisma';
+const { z } = require('zod');
+const { prisma } = require('../lib/prisma');
 
 // Validation schemas
 const createVehicleSchema = z.object({
@@ -18,11 +16,7 @@ const updateVehicleSchema = z.object({
   color: z.string().optional(),
 });
 
-export const getAllVehicles = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getAllVehicles = async (req, res, next) => {
   try {
     // Admins can see all vehicles, users can only see their own
     const vehicles = req.user?.role === 'ADMIN'
@@ -54,41 +48,7 @@ export const getAllVehicles = async (
           },
         });
     
-    // Transform data to match frontend expectations
-    interface OwnerInfo {
-      id: string;
-      name: string;
-      email: string;
-      phoneNumber: string;
-    }
- 
-    interface VehicleWithOwner {
-      id: string;
-      plateNumber: string;
-      size: string;
-      vehicleType: string;
-      color: string;
-      ownerId: string;
-      owner?: OwnerInfo | null;
-      createdAt: Date;
-      updatedAt: Date;
-    }
-
-    interface TransformedVehicle {
-      id: string;
-      plateNumber: string;
-      size: string;
-      vehicleType: string;
-      color: string;
-      ownerId: string;
-      ownerName: string;
-      ownerEmail: string;
-      ownerPhone: string;
-      createdAt: Date;
-      updatedAt: Date;
-    }
-
-    const transformedVehicles: TransformedVehicle[] = (vehicles as VehicleWithOwner[]).map((vehicle) => ({
+    const transformedVehicles = vehicles.map((vehicle) => ({
       id: vehicle.id,
       plateNumber: vehicle.plateNumber,
       size: vehicle.size,
@@ -108,11 +68,7 @@ export const getAllVehicles = async (
   }
 };
 
-export const getVehicleById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getVehicleById = async (req, res, next) => {
   try {
     const { id } = req.params;
     
@@ -160,11 +116,7 @@ export const getVehicleById = async (
   }
 };
 
-export const createVehicle = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const createVehicle = async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
@@ -217,9 +169,6 @@ export const createVehicle = async (
       vehicleType: vehicle.vehicleType,
       color: vehicle.color,
       ownerId: vehicle.ownerId,
-      // ownerName: vehicle.ownerId || '',
-      // ownerEmail: vehicle.owner?.email || '',
-      // ownerPhone: vehicle.owner?.phoneNumber || '',
       createdAt: vehicle.createdAt,
       updatedAt: vehicle.updatedAt,
     };
@@ -230,11 +179,7 @@ export const createVehicle = async (
   }
 };
 
-export const updateVehicle = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const updateVehicle = async (req, res, next) => {
   try {
     const { id } = req.params;
     const vehicleData = updateVehicleSchema.parse(req.body);
@@ -288,9 +233,6 @@ export const updateVehicle = async (
       vehicleType: vehicle.vehicleType,
       color: vehicle.color,
       ownerId: vehicle.ownerId,
-      // ownerName: vehicle.owner?.name || '',
-      // ownerEmail: vehicle.owner?.email || '',
-      // ownerPhone: vehicle.owner?.phoneNumber || '',
       createdAt: vehicle.createdAt,
       updatedAt: vehicle.updatedAt,
     };
@@ -301,11 +243,7 @@ export const updateVehicle = async (
   }
 };
 
-export const deleteVehicle = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const deleteVehicle = async (req, res, next) => {
   try {
     const { id } = req.params;
     
@@ -332,4 +270,12 @@ export const deleteVehicle = async (
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  getAllVehicles,
+  getVehicleById,
+  createVehicle,
+  updateVehicle,
+  deleteVehicle
 };

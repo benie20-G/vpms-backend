@@ -1,10 +1,8 @@
+const { z } = require('zod');
+const { prisma } = require('../lib/prisma');
+const bcrypt = require('bcrypt');
 
-import { Request, Response, NextFunction } from 'express';
-import { z } from 'zod';
-import { prisma } from '../lib/prisma';
-import bcrypt from 'bcrypt';
-
-// Validation schema
+// Validation schemas
 const updateProfileSchema = z.object({
   name: z.string().min(2).optional(),
   phoneNumber: z.string().optional(),
@@ -15,11 +13,7 @@ const updatePasswordSchema = z.object({
   newPassword: z.string().min(6),
 });
 
-export const getUserProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getUserProfile = async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
@@ -46,11 +40,7 @@ export const getUserProfile = async (
   }
 };
 
-export const updateUserProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const updateUserProfile = async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
@@ -79,11 +69,7 @@ export const updateUserProfile = async (
   }
 };
 
-export const updatePassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const updatePassword = async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
@@ -124,11 +110,7 @@ export const updatePassword = async (
   }
 };
 
-export const getAllUsers = async (
-  req: Request,
-  res: Response, 
-  next: NextFunction
-) => {
+const getAllUsers = async (req, res, next) => {
   try {
     // Only admins can list all users
     if (req.user?.role !== 'ADMIN') {
@@ -152,29 +134,7 @@ export const getAllUsers = async (
     });
     
     // Transform data to include vehicle count
-    interface UserWithVehicleCount {
-      id: string;
-      email: string;
-      name: string | null;
-      role: string;
-      phoneNumber: string | null;
-      createdAt: Date;
-      _count: {
-        vehicles: number;
-      };
-    }
-
-    interface TransformedUser {
-      id: string;
-      email: string;
-      name: string | null;
-      role: string;
-      phoneNumber: string | null;
-      createdAt: Date;
-      vehicleCount: number;
-    }
-
-    const transformedUsers: TransformedUser[] = (users as UserWithVehicleCount[]).map((user: UserWithVehicleCount): TransformedUser => ({
+    const transformedUsers = users.map((user) => ({
       id: user.id,
       email: user.email,
       name: user.name,
@@ -188,4 +148,11 @@ export const getAllUsers = async (
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  getUserProfile,
+  updateUserProfile,
+  updatePassword,
+  getAllUsers
 };

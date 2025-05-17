@@ -1,27 +1,18 @@
 
 require('dotenv').config();
 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { z } = require('zod');
+const { prisma } = require('../lib/prisma');
+const { sendEmail } = require('../lib/email');
+const crypto = require('crypto');
 
-import { Request, Response, NextFunction } from 'express';
-import bcrypt from 'bcrypt';
-// import { Secret } from 'jsonwebtoken';
-import jwt, { Secret } from 'jsonwebtoken';
-// import * as jwt from 'jsonwebtoken';
-import { z } from 'zod';
-import { prisma } from '../lib/prisma';
-import { sendEmail } from '../lib/email';
-import crypto from 'crypto';
+// JWT Configuration
+const JWT_SECRET = process.env.JWT_SECRET || 'default_secret';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
-
-
-
-// const JWT_CONFIG = {
-//   secret: process.env.JWT_SECRET as Secret,
-//   expiresIn: process.env.JWT_EXPIRES_IN // Changed to "1d" (1 day) instead of 1000
-// };
 // Validation schemas
-const JWT_SECRET = (process.env.JWT_SECRET || 'default_secret') as string;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN as BigInt; // ✅ Must be string | number
 const registerSchema = z.object({
   email: z.string().email(),
   password: z.string()
@@ -55,8 +46,7 @@ const resetPasswordSchema = z.object({
   newPassword: z.string().min(6),
 });
 
-export const register = async (req: Request,res: Response,next: NextFunction
-) => {
+const register = async (req, res, next) => {
   try {
     const { email, password, name, phoneNumber } = registerSchema.parse(req.body);
 
@@ -124,7 +114,7 @@ export const register = async (req: Request,res: Response,next: NextFunction
   }
 };
 
-export const verifyEmail = async (req: Request,res: Response,next: NextFunction) => {
+const verifyEmail = async (req, res, next) => {
   try {
     const { email, code } = verifyEmailSchema.parse(req.body);
     
@@ -172,11 +162,12 @@ export const verifyEmail = async (req: Request,res: Response,next: NextFunction)
     });
 
     // Generate JWT
-   const token = jwt.sign(
-  { userId: updatedUser.id },
-  JWT_SECRET,
-  { expiresIn: JWT_EXPIRES_IN } 
-);
+    const token = jwt.sign(
+      { userId: updatedUser.id },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+    
     // Send welcome email
     await sendEmail({
       to: email,
@@ -199,10 +190,9 @@ export const verifyEmail = async (req: Request,res: Response,next: NextFunction)
   }
 };
 
-export const resendVerificationCode = async (req: Request,res: Response, next: NextFunction
-) => {
+const resendVerificationCode = async (req, res, next) => {
   try {
-    const { email } = req.body
+    const { email } = req.body;
   
     const user = await prisma.user.findUnique({
       where: { email },
@@ -252,11 +242,7 @@ export const resendVerificationCode = async (req: Request,res: Response, next: N
   }
 };
 
-export const forgotPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const forgotPassword = async (req, res, next) => {
   try {
     const { email } = forgotPasswordSchema.parse(req.body);
     
@@ -308,11 +294,7 @@ export const forgotPassword = async (
   }
 };
 
-export const resetPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const resetPassword = async (req, res, next) => {
   try {
     const { email, code, newPassword } = resetPasswordSchema.parse(req.body);
     
@@ -371,9 +353,7 @@ export const resetPassword = async (
   }
 };
 
-export const login = async (req: Request,res: Response,
-next: NextFunction
-) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = loginSchema.parse(req.body);
 
@@ -403,11 +383,11 @@ next: NextFunction
     }
     
     // Generate JWT
-   const token = jwt.sign(
-  { userId: user.id },
-  JWT_SECRET as Secret,
-  { expiresIn: JWT_EXPIRES_IN }
-);
+    const token = jwt.sign(
+      { userId: user.id },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
 
     // Return user data without password
     const { password: _, ...userData } = user;
@@ -420,4 +400,13 @@ next: NextFunction
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  register,
+  verifyEmail,
+  resendVerificationCode,
+  forgotPassword,
+  resetPassword,
+  login,
 };
