@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Parking Slot Request Has Been Approved</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #1A1F2C;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header h1 {
+            color: #9b87f5;
+            margin: 0;
+        }
+        .logo {
+            margin-bottom: 15px;
+            color: #9b87f5;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #ECFDF5;
+            border-left: 4px solid #10B981;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .success p {
+            margin: 0;
+            color: #047857;
+        }
+        .slot-details {
+            background-color: #F1F0FB;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .slot-details h3 {
+            color: #7E69AB;
+            margin-top: 0;
+        }
+        .slot-details p {
+            margin: 5px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #8E9196;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">NePark</div>
+            <h1>Parking Slot Request Approved</h1>
+        </div>
+        <p>Hello {{name}},</p>
+        <div class="success">
+            <p>Your request for a parking slot has been approved!</p>
+        </div>
+        <p>We're pleased to inform you that your request for a parking slot for your vehicle {{vehicleInfo}} has been approved.</p>
+        
+        <div class="slot-details">
+            <h3>Slot Details</h3>
+            <p><strong>Slot Number:</strong> {{slotNumber}}</p>
+            <p><strong>Location:</strong> {{slotLocation}}</p>
+        </div>
+        
+        <p>You can now park your vehicle in the assigned slot. Please ensure you follow all parking regulations.</p>
+        <p>Best regards,<br>The NePark Team</p>
+        
+        <div class="footer">
+            <p>&copy; 2025 NePark. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

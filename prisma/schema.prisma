@@ -1,0 +1,148 @@
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String    @id @default(uuid())
+  email              String    @unique
+  password           String
+  name               String
+  role               UserRole  @default(USER)
+  phoneNumber        String?
+  profilePicture     String?
+  isVerified         Boolean   @default(false)
+  verificationCode   String?
+  verificationExpires DateTime?
+  resetCode          String?
+  resetExpires       DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  
+  vehicles         Vehicle[]
+  notifications    Notification[]
+  slotRequests     SlotRequest[]
+}
+
+model Vehicle {
+  id            String    @id @default(uuid())
+  plateNumber   String    @unique
+  vehicleType   VehicleType
+  size          VehicleSize
+  color         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  owner         User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId       String
+  
+  parkingSessions ParkingSession[]
+  slotRequests    SlotRequest[]
+}
+
+model ParkingSlot {
+  id            String    @id @default(uuid())
+  slotNumber    String    @unique
+  location      String
+  size          VehicleSize
+  vehicleType   VehicleType
+  status        SlotStatus @default(AVAILABLE)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  parkingSessions ParkingSession[]
+  slotRequests    SlotRequest[]
+}
+
+model SlotRequest {
+  id            String    @id @default(uuid())
+  requestTime   DateTime  @default(now())
+  status        RequestStatus @default(PENDING)
+  responseTime  DateTime?
+  responseNote  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  vehicle       Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  vehicleId     String
+  parkingSlot   ParkingSlot? @relation(fields: [slotId], references: [id])
+  slotId        String?
+  
+  parkingSession ParkingSession?
+}
+
+model ParkingSession {
+  id          String    @id @default(uuid())
+  entryTime   DateTime  @default(now())
+  exitTime    DateTime?
+  fee         Float?
+  status      ParkingStatus @default(ACTIVE)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  vehicle     Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  vehicleId   String
+  
+  slot        ParkingSlot @relation(fields: [slotId], references: [id])
+  slotId      String
+  
+  request     SlotRequest? @relation(fields: [requestId], references: [id])
+  requestId   String?   @unique
+}
+
+model Notification {
+  id          String    @id @default(uuid())
+  message     String
+  read        Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum ParkingStatus {
+  ACTIVE
+  COMPLETED
+  PENDING_PAYMENT
+}
+
+enum VehicleType {
+  CAR
+  MOTORCYCLE
+  TRUCK
+  VAN
+  BUS
+}
+
+enum VehicleSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum SlotStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

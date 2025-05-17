@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Park Zenith Parking Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header h1 {
+            color: #2563eb;
+            margin: 0;
+        }
+        .payment-details {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .payment-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .payment-details th, .payment-details td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #bae6fd;
+        }
+        .total {
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Parking Payment Receipt</h1>
+        </div>
+        <p>Hello {{name}},</p>
+        <p>This is a confirmation of your recent parking payment at Park Zenith.</p>
+        
+        <div class="payment-details">
+            <table>
+                <tr>
+                    <th>Vehicle</th>
+                    <td>{{vehicleMake}} {{vehicleModel}} ({{vehicleColor}})</td>
+                </tr>
+                <tr>
+                    <th>Plate Number</th>
+                    <td>{{plateNumber}}</td>
+                </tr>
+                <tr>
+                    <th>Entry Time</th>
+                    <td>{{entryTime}}</td>
+                </tr>
+                <tr>
+                    <th>Exit Time</th>
+                    <td>{{exitTime}}</td>
+                </tr>
+                <tr>
+                    <th>Duration</th>
+                    <td>{{duration}}</td>
+                </tr>
+                <tr class="total">
+                    <th>Total Fee</th>
+                    <td>${{fee}}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <p>Thank you for using Park Zenith services. We hope to serve you again soon.</p>
+        <p>Best regards,<br>The Park Zenith Team</p>
+        
+        <div class="footer">
+            <p>&copy; 2025 Park Zenith. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

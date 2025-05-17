@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Parking Slot Request Has Been Rejected</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #1A1F2C;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header h1 {
+            color: #9b87f5;
+            margin: 0;
+        }
+        .logo {
+            margin-bottom: 15px;
+            color: #9b87f5;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .rejection {
+            background-color: #FEF2F2;
+            border-left: 4px solid #EA384C;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .rejection p {
+            margin: 0;
+            color: #7F1D1D;
+        }
+        .reason-box {
+            background-color: #F1F0FB;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .reason-box h3 {
+            color: #7E69AB;
+            margin-top: 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #8E9196;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">NePark</div>
+            <h1>Parking Slot Request Rejected</h1>
+        </div>
+        <p>Hello {{name}},</p>
+        <div class="rejection">
+            <p>Your request for a parking slot has been rejected.</p>
+        </div>
+        <p>We regret to inform you that your request for a parking slot for your vehicle {{vehicleInfo}} has been rejected.</p>
+        
+        <div class="reason-box">
+            <h3>Reason for Rejection</h3>
+            <p>{{reason}}</p>
+        </div>
+        
+        <p>You can submit a new request with a different vehicle or at a later time when more slots become available.</p>
+        <p>If you have any questions, please contact our support team.</p>
+        <p>Best regards,<br>The NePark Team</p>
+        
+        <div class="footer">
+            <p>&copy; 2025 NePark. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
