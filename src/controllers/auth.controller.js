@@ -90,7 +90,7 @@ const register = async (req, res, next) => {
     });
     
     // Send verification email
-    await sendVerificationEmail(email,verificationCode, name);
+    await sendVerificationEmail(email,name, verificationCode);
     
     res.status(201).json({
       message: 'User registered successfully. Please verify your email.',

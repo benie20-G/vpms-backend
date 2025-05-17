@@ -4,13 +4,13 @@
   "description": "Backend for Parking Management System",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "js-node-dev --respawn --transpile-only src/server.js",
+    "dev": "node-dev --respawn --transpile-only src/server.js",
     "build": "jsc",
     "start": "node src/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "seed": "js-node prisma/seed.js"
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",

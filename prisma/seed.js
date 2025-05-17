@@ -1,29 +1,42 @@
-import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcrypt'
-const prisma = new PrismaClient()
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
+const prisma = new PrismaClient();
 
 async function main() {
-    const existingadmin = await prisma.user.findUnique({
-      where: { role: 'ADMIN '}})
-  
-      if(existingadmin){
-        await prisma.user.delete({
-          where: { id: existingadmin.id }
-        })
-      }
-  // Hash passwords
-  const adminPassword = bcrypt.hashSync('Benie@123', 10)
+  // Delete existing admin by email (unique field)
+  const existingAdmin = await prisma.user.findUnique({
+    where: { email: 'iratuzibeniegiramata@gmail.com' }
+  });
 
-  // Create users
-  const admin = await prisma.user.create({
-    data:{
-      email:'iratuzibeniegiramata@gmail.com',
-      name:'Benie',
+  if (existingAdmin) {
+    await prisma.user.delete({
+      where: { id: existingAdmin.id }
+    });
+  }
+
+  // Hash password
+  const adminPassword = bcrypt.hashSync('Benie@123', 10);
+
+  // Create admin user
+  await prisma.user.create({
+    data: {
+      email: 'iratuzibeniegiramata@gmail.com',
+      name: 'Benie',
       password: adminPassword,
-      role:'ADMIN',
-      phoneNumber:'+250795192369',
-      isVerified:true,
-
+      role: 'ADMIN',
+      phoneNumber: '+250795192369',
+      isVerified: true,
     }
-  })
+  });
+
+  console.log('Admin user seeded!');
 }
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

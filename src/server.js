@@ -158,7 +158,8 @@ const swaggerOptions = {
   apis: ['./src/routes/*.ts'], // Path to the API docs in routes files
 };
 
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
+// const swaggerSpec = swaggerJsdoc(swaggerOptions);
+const swaggerDocument = require('../swagger');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -168,7 +169,9 @@ app.use(cors());
 app.use(express.json());
 
 // Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use('/swagger-ui',swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -185,7 +188,7 @@ app.use(errorHandler);
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-    console.log(`Swagger Documentation available at http://localhost:${PORT}/api-docs`);
+    console.log(`Swagger Documentation available at http://localhost:${PORT}/swagger-ui`);
   });
 }).catch(err => {
   console.error("Failed to start server:", err);

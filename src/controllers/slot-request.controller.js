@@ -144,7 +144,7 @@ const getSlotRequestById = async (req, res, next) => {
 
 const createSlotRequest = async (req, res, next) => {
   try {
-    const { vehicleId } = createRequestSchema.parse(req.body);
+    const { vehicleId } = createRequestSchema.parse(req.params);
     
     // Verify vehicle exists and belongs to user
     const vehicle = await prisma.vehicle.findUnique({

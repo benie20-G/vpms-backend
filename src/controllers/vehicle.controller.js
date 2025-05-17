@@ -5,14 +5,14 @@ const { prisma } = require('../lib/prisma');
 const createVehicleSchema = z.object({
   plateNumber: z.string(),
   size: z.string(),
-  vehicleType: z.string(),
+ vehicleType: z.string(),
   color: z.string(),
 });
 
 const updateVehicleSchema = z.object({
   plateNumber: z.string().optional(),
   size: z.string().optional(),
-  vehicleType: z.string().optional(),
+ vehicleType: z.string().optional(),
   color: z.string().optional(),
 });
 
@@ -52,7 +52,7 @@ const getAllVehicles = async (req, res, next) => {
       id: vehicle.id,
       plateNumber: vehicle.plateNumber,
       size: vehicle.size,
-      vehicleType: vehicle.vehicleType,
+     vehicleType: vehicle.VehicleType,
       color: vehicle.color,
       ownerId: vehicle.ownerId,
       ownerName: vehicle.owner?.name || '',
@@ -100,7 +100,7 @@ const getVehicleById = async (req, res, next) => {
       id: vehicle.id,
       plateNumber: vehicle.plateNumber,
       size: vehicle.size,
-      vehicleType: vehicle.vehicleType,
+     vehicleType: vehicle.VehicleType,
       color: vehicle.color,
       ownerId: vehicle.ownerId,
       ownerName: vehicle.owner?.name || '',
@@ -166,7 +166,7 @@ const createVehicle = async (req, res, next) => {
       id: vehicle.id,
       plateNumber: vehicle.plateNumber,
       size: vehicle.size,
-      vehicleType: vehicle.vehicleType,
+     vehicleType: vehicle.VehicleType,
       color: vehicle.color,
       ownerId: vehicle.ownerId,
       createdAt: vehicle.createdAt,
@@ -230,7 +230,7 @@ const updateVehicle = async (req, res, next) => {
       id: vehicle.id,
       plateNumber: vehicle.plateNumber,
       size: vehicle.size,
-      vehicleType: vehicle.vehicleType,
+     vehicleType: vehicle.VehicleType,
       color: vehicle.color,
       ownerId: vehicle.ownerId,
       createdAt: vehicle.createdAt,
