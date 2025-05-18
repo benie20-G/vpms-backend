@@ -6,6 +6,8 @@ const userRoutes = Router();
 
 // All user routes require authentication
 userRoutes.use(authenticate);
+
+userRoutes.get('/profile', UserController.getUserProfile);
 userRoutes.put('/profile', UserController.updateUserProfile);
 userRoutes.put('/password', UserController.updatePassword);
 userRoutes.get('/', authorizeAdmin, UserController.getAllUsers);
